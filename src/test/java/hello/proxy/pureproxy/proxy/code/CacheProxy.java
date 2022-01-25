@@ -2,6 +2,7 @@ package hello.proxy.pureproxy.proxy.code;
 
 import lombok.extern.slf4j.Slf4j;
 
+// 프록시 패턴 = 접근 제한 ( 캐시를 통해)
 @Slf4j
 public class CacheProxy implements Subject{
 
