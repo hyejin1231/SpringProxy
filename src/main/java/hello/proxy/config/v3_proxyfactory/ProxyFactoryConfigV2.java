@@ -1,6 +1,6 @@
 package hello.proxy.config.v3_proxyfactory;
 
-import hello.proxy.app.v1.*;
+import hello.proxy.app.v2.*;
 import hello.proxy.config.v3_proxyfactory.advice.LogTraceAdvice;
 import hello.proxy.trace.logtrace.LogTrace;
 import lombok.extern.slf4j.Slf4j;
@@ -13,11 +13,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
-public class ProxyFactoryConfigV1 {
+public class ProxyFactoryConfigV2 {
 
     @Bean
-    public OrderControllerV2 orderControllerV1(LogTrace logTrace) {
-        OrderControllerV1Impl orderController = new OrderControllerV1Impl(orderServiceV1(logTrace));
+    public OrderControllerV2 orderControllerV2(LogTrace logTrace) {
+        OrderControllerV2 orderController = new OrderControllerV2(orderServiceV2(logTrace));
         ProxyFactory proxyFactory = new ProxyFactory(orderController);
         proxyFactory.addAdvisor(getAdvisor(logTrace));
 
@@ -26,9 +26,10 @@ public class ProxyFactoryConfigV1 {
         return proxy;
     }
 
+
     @Bean
-    public OrderServiceV2 orderServiceV1(LogTrace logTrace) {
-        OrderServiceV1Impl orderService = new OrderServiceV1Impl(orderRepositoryV1(logTrace));
+    public OrderServiceV2 orderServiceV2(LogTrace logTrace) {
+        OrderServiceV2 orderService = new OrderServiceV2(orderRepositoryV2(logTrace));
         ProxyFactory proxyFactory = new ProxyFactory(orderService);
         proxyFactory.addAdvisor(getAdvisor(logTrace));
 
@@ -37,25 +38,23 @@ public class ProxyFactoryConfigV1 {
         return proxy;
     }
 
-
     @Bean
-    public OrderRepositoryV2 orderRepositoryV1(LogTrace logTrace) {
-        OrderRepositoryV1Impl orderRepository = new OrderRepositoryV1Impl(); // target
+    public OrderRepositoryV2 orderRepositoryV2(LogTrace logTrace) {
+    OrderRepositoryV2 orderRepository = new OrderRepositoryV2();
 
         ProxyFactory proxyFactory = new ProxyFactory(orderRepository);
         proxyFactory.addAdvisor(getAdvisor(logTrace));
+
         OrderRepositoryV2 proxy = (OrderRepositoryV2) proxyFactory.getProxy();
         log.info("ProxyFactory proxy={}, target={}", proxy.getClass(), orderRepository.getClass());
         return proxy;
     }
 
     private Advisor getAdvisor(LogTrace logTrace) {
-        // pointcut
         NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
         pointcut.setMappedNames("request*", "order*", "save*");
 
-        // advice
-        LogTraceAdvice advice = new LogTraceAdvice(logTrace);
-        return new DefaultPointcutAdvisor(pointcut, advice);
+        LogTraceAdvice advisor = new LogTraceAdvice(logTrace);
+        return new DefaultPointcutAdvisor(pointcut, advisor);
     }
 }

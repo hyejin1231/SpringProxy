@@ -12,11 +12,11 @@ import java.lang.reflect.Proxy;
 public class DynamicProxyBasicConfig {
 
     @Bean
-    public OrderControllerV1 orderControllerV1(LogTrace logTrace) {
+    public OrderControllerV2 orderControllerV1(LogTrace logTrace) {
         OrderControllerV1Impl orderController = new OrderControllerV1Impl(orderServiceV1(logTrace));
 
-        OrderControllerV1 proxy = (OrderControllerV1) Proxy.newProxyInstance(OrderControllerV1.class.getClassLoader(),
-                new Class[]{OrderControllerV1.class},
+        OrderControllerV2 proxy = (OrderControllerV2) Proxy.newProxyInstance(OrderControllerV2.class.getClassLoader(),
+                new Class[]{OrderControllerV2.class},
                 new LogTraceBasicGHandler(orderController, logTrace));
 
         return proxy;
@@ -25,22 +25,22 @@ public class DynamicProxyBasicConfig {
 
 
     @Bean
-    public OrderServiceV1 orderServiceV1(LogTrace logTrace) {
+    public OrderServiceV2 orderServiceV1(LogTrace logTrace) {
         OrderServiceV1Impl orderService = new OrderServiceV1Impl(orderRepositoryV1(logTrace));
 
-        OrderServiceV1 proxy = (OrderServiceV1) Proxy.newProxyInstance(OrderServiceV1.class.getClassLoader(),
-                new Class[]{OrderServiceV1.class},
+        OrderServiceV2 proxy = (OrderServiceV2) Proxy.newProxyInstance(OrderServiceV2.class.getClassLoader(),
+                new Class[]{OrderServiceV2.class},
                 new LogTraceBasicGHandler(orderService, logTrace));
         return proxy;
     }
 
 
     @Bean
-    public OrderRepositoryV1 orderRepositoryV1(LogTrace logTrace) {
+    public OrderRepositoryV2 orderRepositoryV1(LogTrace logTrace) {
         OrderRepositoryV1Impl orderRepository = new OrderRepositoryV1Impl();
 
-        OrderRepositoryV1 proxy = (OrderRepositoryV1) Proxy.newProxyInstance(OrderRepositoryV1.class.getClassLoader(),
-                new Class[]{OrderRepositoryV1.class},
+        OrderRepositoryV2 proxy = (OrderRepositoryV2) Proxy.newProxyInstance(OrderRepositoryV2.class.getClassLoader(),
+                new Class[]{OrderRepositoryV2.class},
                 new LogTraceBasicGHandler(orderRepository, logTrace));
 
         return proxy;
