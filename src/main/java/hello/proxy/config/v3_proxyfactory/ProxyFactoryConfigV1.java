@@ -16,35 +16,35 @@ import org.springframework.context.annotation.Configuration;
 public class ProxyFactoryConfigV1 {
 
     @Bean
-    public OrderControllerV2 orderControllerV1(LogTrace logTrace) {
+    public OrderControllerV1 orderControllerV1(LogTrace logTrace) {
         OrderControllerV1Impl orderController = new OrderControllerV1Impl(orderServiceV1(logTrace));
         ProxyFactory proxyFactory = new ProxyFactory(orderController);
         proxyFactory.addAdvisor(getAdvisor(logTrace));
 
-        OrderControllerV2 proxy = (OrderControllerV2) proxyFactory.getProxy();
+        OrderControllerV1 proxy = (OrderControllerV1) proxyFactory.getProxy();
         log.info("ProxyFactory proxy={}, target={}", proxy.getClass(), orderController.getClass());
         return proxy;
     }
 
     @Bean
-    public OrderServiceV2 orderServiceV1(LogTrace logTrace) {
+    public OrderServiceV1 orderServiceV1(LogTrace logTrace) {
         OrderServiceV1Impl orderService = new OrderServiceV1Impl(orderRepositoryV1(logTrace));
         ProxyFactory proxyFactory = new ProxyFactory(orderService);
         proxyFactory.addAdvisor(getAdvisor(logTrace));
 
-        OrderServiceV2 proxy = (OrderServiceV2) proxyFactory.getProxy();
+        OrderServiceV1 proxy = (OrderServiceV1) proxyFactory.getProxy();
         log.info("ProxyFactory proxy={}, target={}", proxy.getClass(), orderService.getClass());
         return proxy;
     }
 
 
     @Bean
-    public OrderRepositoryV2 orderRepositoryV1(LogTrace logTrace) {
+    public OrderRepositoryV1 orderRepositoryV1(LogTrace logTrace) {
         OrderRepositoryV1Impl orderRepository = new OrderRepositoryV1Impl(); // target
 
         ProxyFactory proxyFactory = new ProxyFactory(orderRepository);
         proxyFactory.addAdvisor(getAdvisor(logTrace));
-        OrderRepositoryV2 proxy = (OrderRepositoryV2) proxyFactory.getProxy();
+        OrderRepositoryV1 proxy = (OrderRepositoryV1) proxyFactory.getProxy();
         log.info("ProxyFactory proxy={}, target={}", proxy.getClass(), orderRepository.getClass());
         return proxy;
     }
